@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="FAMa ka Keneya – Plateforme numérique de télémédecine et de coordination médicale à distance pour les Forces Armées Maliennes." />
+  <title>FAMa ka Keneya – La santé à portée de nos forces</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Favicon SVG inline — emplacement logo FAMa en attendant l'officiel -->
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+  <link rel="icon" type="image/png" href="images/favicon.png" sizes="32x32" />
+</head>
+<body>
+
+  <!-- ========================================================
+       EN-TÊTE / NAVIGATION
+  ======================================================== -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+
+      <!-- Logo + Identité -->
+      <div class="header__brand">
+        <div class="header__logo-wrap">
+          <!-- Emplacement réservé pour le logo officiel des FAMa -->
+          <div class="header__logo-placeholder" aria-label="Logo officiel des Forces Armées Maliennes">
+            <span class="header__logo-initials">FAMa</span>
+          </div>
+        </div>
+        <div class="header__title-wrap">
+          <span class="header__site-name">FAMa ka Keneya</span>
+          <span class="header__tagline">Santé · Forces Armées · Mali</span>
+        </div>
+      </div>
+
+      <!-- Navigation principale -->
+      <nav class="nav" aria-label="Navigation principale">
+        <ul class="nav__list" id="navList">
+          <li class="nav__item"><a class="nav__link active" href="#accueil">Accueil</a></li>
+          <li class="nav__item"><a class="nav__link" href="#avantages">Avantages</a></li>
+          <li class="nav__item"><a class="nav__link" href="#apropos">À propos</a></li>
+          <li class="nav__item"><a class="nav__link" href="#fonctionnalites">Fonctionnalités</a></li>
+          <li class="nav__item"><a class="nav__link" href="#faq">FAQ</a></li>
+        </ul>
+        <a href="login.html" class="btn btn--primary nav__cta">Se connecter</a>
+      </nav>
+
+      <!-- Bouton menu mobile (hamburger) -->
+      <button class="nav__toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+      </button>
+
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ========================================================
+         SECTION HERO (PRINCIPALE)
+    ======================================================== -->
+    <section class="hero" id="accueil" aria-label="Section principale">
+      <div class="hero__bg">
+        <picture>
+          <source srcset="images/hero-fama.webp" type="image/webp" />
+          <img
+            src="images/hero-fama.jpg"
+            alt="Soldats des Forces Armées Maliennes en opération"
+            class="hero__image"
+          />
+        </picture>
+        <div class="hero__overlay"></div>
+      </div>
+      <div class="container hero__content">
+        <!-- Bandeau couleurs nationales -->
+        <div class="hero__flag-bar" aria-hidden="true">
+          <span class="flag-green"></span>
+          <span class="flag-yellow"></span>
+          <span class="flag-red"></span>
+        </div>
+        <h1 class="hero__title">
+          FAMa ka Keneya<br />
+          <span class="hero__title-sub">La santé à portée de nos forces</span>
+        </h1>
+        <p class="hero__description">
+          Une plateforme numérique dédiée aux Forces Armées Maliennes pour faciliter
+          l'accès aux soins médicaux, coordonner les consultations à distance et assurer
+          le suivi de la santé de chaque soldat, où qu'il se trouve.
+        </p>
+        <div class="hero__actions">
+          <a href="#fonctionnalites" class="btn btn--primary btn--large">
+            Découvrir la plateforme
+          </a>
+          <a href="#apropos" class="btn btn--outline btn--large">
+            En savoir plus
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION AVANTAGES
+    ======================================================== -->
+    <section class="avantages section" id="avantages" aria-label="Avantages de la plateforme">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__overtitle">Pourquoi FAMa ka Keneya ?</p>
+          <h2 class="section__title">Des avantages conçus pour le terrain</h2>
+        </div>
+        <div class="avantages__grid">
+
+          <article class="avantage-card">
+            <div class="avantage-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="2.5"/>
+                <path d="M16 24h16M24 16v16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="avantage-card__title">Accès aux soins à distance</h3>
+            <p class="avantage-card__text">
+              Les militaires déployés peuvent accéder aux services médicaux sans
+              se déplacer, directement depuis leur position sur le terrain.
+            </p>
+          </article>
+
+          <article class="avantage-card">
+            <div class="avantage-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="6" y="10" width="36" height="28" rx="4" stroke="currentColor" stroke-width="2.5"/>
+                <path d="M16 22h8M16 28h12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="34" cy="22" r="4" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="avantage-card__title">Assistance intelligente</h3>
+            <p class="avantage-card__text">
+              Un système d'assistance par intelligence artificielle pour orienter
+              rapidement vers le professionnel de santé le plus adapté.
+            </p>
+          </article>
+
+          <article class="avantage-card">
+            <div class="avantage-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="16" cy="18" r="6" stroke="currentColor" stroke-width="2.5"/>
+                <circle cx="32" cy="18" r="6" stroke="currentColor" stroke-width="2.5"/>
+                <path d="M8 38c0-6 3.6-10 8-10h16c4.4 0 8 4 8 10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="avantage-card__title">Collaboration médicale</h3>
+            <p class="avantage-card__text">
+              Les professionnels de santé militaires et civils collaborent en temps
+              réel pour garantir une prise en charge rapide et coordonnée.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION À PROPOS
+    ======================================================== -->
+    <section class="apropos section section--alt" id="apropos" aria-label="À propos de la plateforme">
+      <div class="container">
+        <div class="apropos__inner">
+          <div class="apropos__visual" aria-hidden="true">
+            <div class="apropos__emblem">
+              <div class="apropos__emblem-circle">
+                <span class="apropos__emblem-text">FAMa</span>
+                <span class="apropos__emblem-sub">ka Keneya</span>
+              </div>
+              <div class="apropos__flag-strip">
+                <span class="flag-green"></span>
+                <span class="flag-yellow"></span>
+                <span class="flag-red"></span>
+              </div>
+            </div>
+          </div>
+          <div class="apropos__content">
+            <p class="section__overtitle">À propos</p>
+            <h2 class="section__title">Une mission, une priorité : la santé du soldat</h2>
+            <p class="apropos__text">
+              <strong>FAMa ka Keneya</strong> — qui signifie « La santé des FAMa » en bambara —
+              est une plateforme numérique développée pour répondre aux besoins médicaux
+              spécifiques des Forces Armées Maliennes.
+            </p>
+            <p class="apropos__text">
+              Face aux contraintes d'éloignement et aux défis des zones de déploiement,
+              la plateforme vise à réduire les délais d'accès aux soins, à améliorer
+              la coordination entre les équipes médicales militaires et à renforcer
+              le suivi médical de chaque personnel en service.
+            </p>
+            <div class="apropos__stats">
+              <div class="stat">
+                <span class="stat__value">24/7</span>
+                <span class="stat__label">Disponibilité</span>
+              </div>
+              <div class="stat">
+                <span class="stat__value">100%</span>
+                <span class="stat__label">Sécurisé</span>
+              </div>
+              <div class="stat">
+                <span class="stat__value">FAMa</span>
+                <span class="stat__label">Dédiée aux forces</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION FONCTIONNALITÉS
+    ======================================================== -->
+    <section class="fonctionnalites section" id="fonctionnalites" aria-label="Fonctionnalités de la plateforme">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__overtitle">Ce que fait la plateforme</p>
+          <h2 class="section__title">Fonctionnalités principales</h2>
+          <p class="section__subtitle">
+            Des outils pensés pour simplifier la prise en charge médicale
+            dans un contexte militaire exigeant.
+          </p>
+        </div>
+        <div class="fonctionnalites__grid">
+
+          <div class="fonct-card">
+            <div class="fonct-card__number" aria-hidden="true">01</div>
+            <div class="fonct-card__body">
+              <h3 class="fonct-card__title">Demandes de consultation</h3>
+              <p class="fonct-card__text">
+                Le personnel militaire peut soumettre une demande de consultation médicale
+                en décrivant ses symptômes ou sa situation, depuis n'importe quel appareil connecté.
+              </p>
+            </div>
+          </div>
+
+          <div class="fonct-card">
+            <div class="fonct-card__number" aria-hidden="true">02</div>
+            <div class="fonct-card__body">
+              <h3 class="fonct-card__title">Orientation médicale</h3>
+              <p class="fonct-card__text">
+                La plateforme oriente chaque demande vers le professionnel de santé disponible
+                et le mieux qualifié, en tenant compte de la spécialité requise et de la disponibilité.
+              </p>
+            </div>
+          </div>
+
+          <div class="fonct-card">
+            <div class="fonct-card__number" aria-hidden="true">03</div>
+            <div class="fonct-card__body">
+              <h3 class="fonct-card__title">Suivi des demandes</h3>
+              <p class="fonct-card__text">
+                Chaque demande est suivie en temps réel. Le patient comme le médecin
+                peuvent consulter l'état d'avancement à tout moment.
+              </p>
+            </div>
+          </div>
+
+          <div class="fonct-card">
+            <div class="fonct-card__number" aria-hidden="true">04</div>
+            <div class="fonct-card__body">
+              <h3 class="fonct-card__title">Assistance par IA</h3>
+              <p class="fonct-card__text">
+                Un assistant intelligent aide les utilisateurs à formuler leurs demandes,
+                à comprendre les étapes du processus et à accéder rapidement aux bonnes informations.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION FAQ
+    ======================================================== -->
+    <section class="faq section section--alt" id="faq" aria-label="Foire aux questions">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__overtitle">FAQ</p>
+          <h2 class="section__title">Questions fréquentes</h2>
+        </div>
+        <div class="faq__list" id="faqList">
+
+          <div class="faq__item" data-faq>
+            <button class="faq__question" aria-expanded="false">
+              Qui peut accéder à la plateforme FAMa ka Keneya ?
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq__answer" hidden>
+              <p>
+                La plateforme est réservée au personnel des Forces Armées Maliennes :
+                soldats, officiers, médecins militaires et personnels administratifs autorisés.
+                L'accès se fait via un compte officiel attribué par l'administration.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq__item" data-faq>
+            <button class="faq__question" aria-expanded="false">
+              La plateforme fonctionne-t-elle en zones à faible connectivité ?
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq__answer" hidden>
+              <p>
+                La plateforme est conçue pour fonctionner avec des connexions internet
+                limitées. Des fonctionnalités allégées sont disponibles en mode à faible bande passante
+                pour les zones de déploiement éloignées.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq__item" data-faq>
+            <button class="faq__question" aria-expanded="false">
+              Les données médicales sont-elles sécurisées ?
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq__answer" hidden>
+              <p>
+                Oui. La sécurité et la confidentialité des données médicales sont une
+                priorité absolue. Toutes les informations sont chiffrées et accessibles
+                uniquement aux personnels habilités selon leur rôle.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq__item" data-faq>
+            <button class="faq__question" aria-expanded="false">
+              Comment soumettre une demande de consultation ?
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq__answer" hidden>
+              <p>
+                Une fois connecté à votre compte, rendez-vous dans la section
+                « Nouvelle consultation ». Renseignez votre motif, décrivez vos symptômes
+                et soumettez la demande. Vous serez orienté vers un professionnel de santé disponible.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq__item" data-faq>
+            <button class="faq__question" aria-expanded="false">
+              La plateforme remplace-t-elle une consultation médicale physique ?
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq__answer" hidden>
+              <p>
+                Non. FAMa ka Keneya est un outil de coordination et d'accès aux soins à distance.
+                Elle facilite la prise en charge initiale et l'orientation médicale, mais ne
+                remplace pas une consultation physique lorsque celle-ci est nécessaire.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================
+       PIED DE PAGE
+  ======================================================== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+
+      <div class="footer__brand">
+        <div class="header__logo-placeholder footer__logo" aria-label="Logo FAMa ka Keneya">
+          <span class="header__logo-initials">FAMa</span>
+        </div>
+        <div>
+          <p class="footer__name">FAMa ka Keneya</p>
+          <p class="footer__description">
+            Plateforme numérique de télémédecine et de coordination médicale
+            à distance pour les Forces Armées Maliennes.
+          </p>
+        </div>
+      </div>
+
+      <div class="footer__links">
+        <h4 class="footer__links-title">Navigation</h4>
+        <ul class="footer__links-list">
+          <li><a href="#accueil" class="footer__link">Accueil</a></li>
+          <li><a href="#apropos" class="footer__link">À propos</a></li>
+          <li><a href="#fonctionnalites" class="footer__link">Fonctionnalités</a></li>
+          <li><a href="#faq" class="footer__link">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__links">
+        <h4 class="footer__links-title">Informations</h4>
+        <ul class="footer__links-list">
+          <li><span class="footer__link footer__link--soon" aria-label="Mentions légales – page à venir">Mentions légales</span></li>
+          <li><span class="footer__link footer__link--soon" aria-label="Confidentialité – page à venir">Confidentialité</span></li>
+          <li><span class="footer__link footer__link--soon" aria-label="Contact – page à venir">Contact</span></li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="footer__bottom">
+      <div class="container">
+        <div class="footer__flag-bar" aria-hidden="true">
+          <span class="flag-green"></span>
+          <span class="flag-yellow"></span>
+          <span class="flag-red"></span>
+        </div>
+        <p class="footer__copy">
+          &copy; 2026 FAMa ka Keneya – Forces Armées Maliennes. Tous droits réservés.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

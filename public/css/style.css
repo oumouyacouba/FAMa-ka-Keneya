@@ -1,0 +1,1137 @@
+/* ============================================================
+   FAMa ka Keneya – Feuille de style principale
+   Structure : Variables → Reset → Utilitaires → Composants →
+               Header → Hero → Sections → Footer → Responsive
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. VARIABLES DE DESIGN
+   ------------------------------------------------------------ */
+:root {
+  /* Couleurs principales */
+  --color-primary:       #1a4731;   /* Vert foncé institutionnel */
+  --color-primary-dark:  #0f2b1e;   /* Vert très foncé (hover, footer) */
+  --color-primary-light: #2d6b4a;   /* Vert moyen (accents) */
+
+  /* Couleurs secondaires */
+  --color-gold:          #c9a84c;   /* Doré discret */
+  --color-gold-light:    #e8c97a;   /* Doré clair */
+
+  /* Couleurs du drapeau malien (détails uniquement) */
+  --flag-green:          #14b53a;
+  --flag-yellow:         #fcd116;
+  --flag-red:            #ce1126;
+
+  /* Neutres */
+  --color-white:         #ffffff;
+  --color-bg:            #f4f6f4;   /* Gris très clair légèrement verdâtre */
+  --color-bg-alt:        #eef1ee;   /* Fond des sections alternées */
+  --color-surface:       #ffffff;
+  --color-border:        #dde3dd;
+
+  /* Textes */
+  --color-text:          #1c2b22;   /* Quasi-noir vert */
+  --color-text-muted:    #5a7060;   /* Texte secondaire */
+  --color-text-light:    #8fa896;   /* Texte discret */
+
+  /* Typographie */
+  --font-family:         'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  --font-size-base:      1rem;        /* 16px */
+  --font-size-sm:        0.875rem;    /* 14px */
+  --font-size-lg:        1.125rem;    /* 18px */
+  --font-size-xl:        1.375rem;    /* 22px */
+  --font-size-2xl:       1.75rem;     /* 28px */
+  --font-size-3xl:       2.25rem;     /* 36px */
+  --font-size-4xl:       3rem;        /* 48px */
+
+  /* Espacements */
+  --space-1:   0.25rem;
+  --space-2:   0.5rem;
+  --space-3:   0.75rem;
+  --space-4:   1rem;
+  --space-5:   1.25rem;    /* 20px — ajout correction audit */
+  --space-6:   1.5rem;
+  --space-8:   2rem;
+  --space-10:  2.5rem;
+  --space-12:  3rem;
+  --space-16:  4rem;
+  --space-20:  5rem;
+  --space-24:  6rem;
+
+  /* Effets */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-full: 9999px;
+
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md:   0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg:   0 8px 32px rgba(0,0,0,0.14);
+
+  --transition:  0.25s ease;
+
+  /* Largeur max du contenu */
+  --max-width: 1200px;
+
+  /* Hauteur de l'en-tête */
+  --header-height: 72px;
+}
+
+
+/* ------------------------------------------------------------
+   2. RESET & BASE
+   ------------------------------------------------------------ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+h1, h2, h3, h4, h5 {
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+p {
+  line-height: 1.7;
+}
+
+
+/* ------------------------------------------------------------
+   3. UTILITAIRES
+   ------------------------------------------------------------ */
+
+/* Conteneur centré */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+/* Sections */
+.section {
+  padding-block: var(--space-20);
+}
+
+.section--alt {
+  background-color: var(--color-bg-alt);
+}
+
+/* En-tête de section */
+.section__header {
+  text-align: center;
+  margin-bottom: var(--space-12);
+}
+
+.section__overtitle {
+  display: inline-block;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: var(--space-3);
+}
+
+.section__title {
+  font-size: var(--font-size-3xl);
+  color: var(--color-primary-dark);
+  margin-bottom: var(--space-4);
+}
+
+.section__subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+/* Couleurs drapeau malien */
+.flag-green  { background-color: var(--flag-green); }
+.flag-yellow { background-color: var(--flag-yellow); }
+.flag-red    { background-color: var(--flag-red); }
+
+
+/* ------------------------------------------------------------
+   4. BOUTONS
+   ------------------------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.65em 1.5em;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background-color var(--transition),
+              color var(--transition),
+              border-color var(--transition),
+              box-shadow var(--transition),
+              transform var(--transition);
+  white-space: nowrap;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* Bouton principal — vert foncé fond doré */
+.btn--primary {
+  background-color: var(--color-gold);
+  color: var(--color-primary-dark);
+  border: 2px solid var(--color-gold);
+}
+
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  background-color: var(--color-gold-light);
+  border-color: var(--color-gold-light);
+  box-shadow: 0 4px 12px rgba(201, 168, 76, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Bouton contour — blanc transparent */
+.btn--outline {
+  background-color: transparent;
+  color: var(--color-white);
+  border: 2px solid rgba(255, 255, 255, 0.65);
+}
+
+.btn--outline:hover,
+.btn--outline:focus-visible {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: var(--color-white);
+  transform: translateY(-1px);
+}
+
+/* Taille grande */
+.btn--large {
+  padding: 0.8em 2em;
+  font-size: var(--font-size-lg);
+}
+
+
+/* ------------------------------------------------------------
+   5. EN-TÊTE
+   ------------------------------------------------------------ */
+.header {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 100;
+  height: var(--header-height);
+  background-color: var(--color-primary-dark);
+  border-bottom: 3px solid var(--color-gold);
+  transition: box-shadow var(--transition);
+}
+
+/* Ombre ajoutée via JS au défilement */
+.header--scrolled {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  gap: var(--space-6);
+}
+
+/* Marque / Identité */
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.header__logo-wrap {
+  flex-shrink: 0;
+}
+
+/* Emplacement logo — cercle avec initiales en attendant le vrai logo */
+.header__logo-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--color-primary-light);
+  border: 2px solid var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.header__logo-initials {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--color-gold);
+  letter-spacing: 0.04em;
+}
+
+.header__title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.header__site-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-white);
+  line-height: 1.2;
+}
+
+.header__tagline {
+  font-size: 0.68rem;
+  color: var(--color-gold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.nav__link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background-color var(--transition);
+  position: relative;
+}
+
+.nav__link::after {
+  content: '';
+  position: absolute;
+  inset-inline: var(--space-3);
+  bottom: 0;
+  height: 2px;
+  background-color: var(--color-gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition);
+  border-radius: 1px;
+}
+
+.nav__link:hover,
+.nav__link.active {
+  color: var(--color-white);
+}
+
+.nav__link:hover::after,
+.nav__link.active::after {
+  transform: scaleX(1);
+}
+
+.nav__cta {
+  flex-shrink: 0;
+}
+
+/* Bouton hamburger (caché sur desktop) */
+.nav__toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.nav__toggle-bar {
+  display: block;
+  height: 2.5px;
+  border-radius: 2px;
+  background-color: var(--color-white);
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+/* Animation hamburger → croix */
+.nav__toggle[aria-expanded="true"] .nav__toggle-bar:nth-child(1) {
+  transform: translateY(7.5px) rotate(45deg);
+}
+.nav__toggle[aria-expanded="true"] .nav__toggle-bar:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.nav__toggle[aria-expanded="true"] .nav__toggle-bar:nth-child(3) {
+  transform: translateY(-7.5px) rotate(-45deg);
+}
+
+
+/* ------------------------------------------------------------
+   6. SECTION HERO
+   ------------------------------------------------------------ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-block-start: var(--header-height);
+  overflow: hidden;
+}
+
+/* Image de fond */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Superposition dégradé vert foncé */
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(10, 28, 18, 0.88) 0%,
+    rgba(15, 43, 30, 0.75) 50%,
+    rgba(26, 71, 49, 0.55) 100%
+  );
+}
+
+/* Contenu du hero */
+.hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  padding-block: var(--space-20);
+}
+
+/* Mini-bandeau drapeau */
+.hero__flag-bar {
+  display: flex;
+  height: 4px;
+  width: 80px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+}
+
+.hero__flag-bar span,
+.apropos__flag-strip span,
+.footer__flag-bar span {
+  flex: 1;
+}
+
+/* Titre principal */
+.hero__title {
+  font-size: clamp(2rem, 5vw, var(--font-size-4xl));
+  font-weight: 800;
+  color: var(--color-white);
+  margin-bottom: var(--space-3);
+  line-height: 1.15;
+}
+
+.hero__title-sub {
+  display: block;
+  font-size: clamp(1.1rem, 2.5vw, var(--font-size-2xl));
+  font-weight: 400;
+  color: var(--color-gold-light);
+  margin-top: var(--space-2);
+}
+
+/* Description */
+.hero__description {
+  font-size: var(--font-size-lg);
+  color: rgba(255, 255, 255, 0.88);
+  margin-bottom: var(--space-10);
+  max-width: 620px;
+}
+
+/* Boutons */
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+
+/* ------------------------------------------------------------
+   7. SECTION AVANTAGES
+   ------------------------------------------------------------ */
+.avantages__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-8);
+}
+
+.avantage-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  transition: box-shadow var(--transition), transform var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.avantage-card::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-gold));
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.avantage-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.avantage-card:hover::before {
+  opacity: 1;
+}
+
+.avantage-card__icon {
+  width: 56px;
+  height: 56px;
+  background-color: rgba(26, 71, 49, 0.08);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-5);
+  color: var(--color-primary);
+}
+
+.avantage-card__icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.avantage-card__title {
+  font-size: var(--font-size-xl);
+  color: var(--color-primary-dark);
+  margin-bottom: var(--space-3);
+}
+
+.avantage-card__text {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
+
+
+/* ------------------------------------------------------------
+   8. SECTION À PROPOS
+   ------------------------------------------------------------ */
+.apropos__inner {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: var(--space-16);
+  align-items: center;
+}
+
+/* Visuel décoratif gauche */
+.apropos__visual {
+  display: flex;
+  justify-content: center;
+}
+
+.apropos__emblem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.apropos__emblem-circle {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+  border: 4px solid var(--color-gold);
+  box-shadow: 0 8px 40px rgba(15, 43, 30, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+}
+
+.apropos__emblem-text {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-gold);
+  letter-spacing: 0.06em;
+}
+
+.apropos__emblem-sub {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.apropos__flag-strip {
+  display: flex;
+  height: 5px;
+  width: 120px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+/* Contenu textuel */
+.apropos__text {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+  font-size: var(--font-size-lg);
+}
+
+/* Statistiques */
+.apropos__stats {
+  display: flex;
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.stat__value {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.stat__label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+
+/* ------------------------------------------------------------
+   9. SECTION FONCTIONNALITÉS
+   ------------------------------------------------------------ */
+.fonctionnalites__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+}
+
+.fonct-card {
+  display: flex;
+  gap: var(--space-6);
+  align-items: flex-start;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.fonct-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.fonct-card__number {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(26, 71, 49, 0.10);
+  flex-shrink: 0;
+  min-width: 60px;
+  transition: color var(--transition);
+}
+
+.fonct-card:hover .fonct-card__number {
+  color: var(--color-gold);
+}
+
+.fonct-card__title {
+  font-size: var(--font-size-xl);
+  color: var(--color-primary-dark);
+  margin-bottom: var(--space-3);
+}
+
+.fonct-card__text {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
+
+
+/* ------------------------------------------------------------
+   10. SECTION FAQ
+   ------------------------------------------------------------ */
+.faq__list {
+  max-width: 820px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.faq__item {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: box-shadow var(--transition);
+}
+
+.faq__item:has(.faq__question[aria-expanded="true"]) {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 2px 12px rgba(26, 71, 49, 0.10);
+}
+
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-5) var(--space-6);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.faq__question:hover {
+  color: var(--color-primary);
+}
+
+.faq__question[aria-expanded="true"] {
+  color: var(--color-primary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Icône +/– */
+.faq__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  flex-shrink: 0;
+  position: relative;
+  transition: background-color var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.faq__icon::before,
+.faq__icon::after {
+  content: '';
+  position: absolute;
+  background-color: var(--color-primary);
+  border-radius: 1px;
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+/* Trait horizontal */
+.faq__icon::before {
+  width: 12px;
+  height: 2px;
+}
+
+/* Trait vertical */
+.faq__icon::after {
+  width: 2px;
+  height: 12px;
+}
+
+.faq__question[aria-expanded="true"] .faq__icon {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  transform: rotate(45deg);
+}
+
+.faq__question[aria-expanded="true"] .faq__icon::before,
+.faq__question[aria-expanded="true"] .faq__icon::after {
+  background-color: var(--color-white);
+}
+
+/* Réponse */
+.faq__answer {
+  padding: var(--space-5) var(--space-6);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  line-height: 1.7;
+  /* Animation d'ouverture via JS */
+  animation: faq-open 0.25s ease;
+}
+
+@keyframes faq-open {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ------------------------------------------------------------
+   11. PIED DE PAGE
+   ------------------------------------------------------------ */
+.footer {
+  background-color: var(--color-primary-dark);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer__inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--space-12);
+  padding-block: var(--space-16);
+}
+
+.footer__brand {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.footer__logo {
+  flex-shrink: 0;
+}
+
+.footer__name {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: var(--space-2);
+}
+
+.footer__description {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.65;
+  max-width: 340px;
+}
+
+.footer__links-title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  margin-bottom: var(--space-5);
+}
+
+.footer__links-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.footer__link {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.65);
+  transition: color var(--transition);
+}
+
+.footer__link:hover {
+  color: var(--color-gold-light);
+}
+
+/* Liens désactivés temporairement (pages à venir) */
+.footer__link--soon {
+  cursor: default;
+  color: rgba(255, 255, 255, 0.35);
+  font-style: italic;
+}
+
+.footer__link--soon::after {
+  content: ' (à venir)';
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+/* Bandeau bas */
+.footer__bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  padding-block: var(--space-5);
+}
+
+.footer__bottom .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.footer__flag-bar {
+  display: flex;
+  height: 3px;
+  width: 60px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.footer__copy {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.45);
+}
+
+
+/* ------------------------------------------------------------
+   12. RESPONSIVE – TABLETTE (≤ 1024px)
+   ------------------------------------------------------------ */
+@media (max-width: 1024px) {
+
+  :root {
+    --font-size-3xl: 1.9rem;
+    --font-size-4xl: 2.6rem;
+  }
+
+  .avantages__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .apropos__inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+  }
+
+  .apropos__visual {
+    order: -1;
+  }
+
+  .apropos__emblem-circle {
+    width: 180px;
+    height: 180px;
+  }
+
+  .footer__inner {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+  }
+
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   13. RESPONSIVE – MOBILE (≤ 768px)
+   ------------------------------------------------------------ */
+@media (max-width: 768px) {
+
+  :root {
+    --space-20: 4rem;
+    --space-16: 3rem;
+    --space-12: 2.5rem;
+  }
+
+  /* Navigation mobile */
+  .nav__toggle {
+    display: flex;
+    z-index: 110;
+  }
+
+  .nav {
+    position: fixed;
+    inset-block-start: var(--header-height);
+    inset-inline: 0;
+    background-color: var(--color-primary-dark);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: var(--space-4) var(--space-6) var(--space-6);
+    transform: translateY(-110%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    border-bottom: 3px solid var(--color-gold);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .nav--open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nav__list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: var(--space-4);
+  }
+
+  .nav__link {
+    padding: var(--space-4) var(--space-2);
+    font-size: var(--font-size-base);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .nav__link::after {
+    display: none;
+  }
+
+  .nav__cta {
+    text-align: center;
+    padding: var(--space-3) var(--space-6);
+  }
+
+  /* Hero */
+  .hero__content {
+    padding-block: var(--space-12);
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero__actions .btn--large {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* Avantages */
+  .avantages__grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Fonctionnalités */
+  .fonctionnalites__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fonct-card {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .fonct-card__number {
+    font-size: 2rem;
+  }
+
+  /* À propos */
+  .apropos__stats {
+    flex-wrap: wrap;
+    gap: var(--space-6);
+  }
+
+  .section__title {
+    font-size: var(--font-size-2xl);
+  }
+
+  /* Footer */
+  .footer__inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    padding-block: var(--space-10);
+  }
+
+  .footer__brand {
+    grid-column: auto;
+    flex-direction: column;
+  }
+
+  .footer__bottom .container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   14. RESPONSIVE – TRÈS PETIT ÉCRAN (≤ 480px)
+   ------------------------------------------------------------ */
+@media (max-width: 480px) {
+  :root {
+    --space-20: 3rem;
+  }
+
+  .container {
+    padding-inline: var(--space-4);
+  }
+
+  .header__tagline {
+    display: none;
+  }
+
+  .hero__title {
+    font-size: 1.75rem;
+  }
+
+  .avantage-card {
+    padding: var(--space-6);
+  }
+
+  .fonct-card {
+    padding: var(--space-6);
+  }
+}

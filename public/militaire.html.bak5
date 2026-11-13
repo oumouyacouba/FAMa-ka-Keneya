@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Espace militaire – FAMa ka Keneya, plateforme de santé des Forces Armées Maliennes." />
+  <title>Espace Militaire – FAMa ka Keneya</title>
+
+  <!--
+    NOTE ARCHITECTURALE – SÉCURITÉ
+    Cette page est en mode démonstration frontend.
+    En production : token de session Express, vérification du rôle côté serveur,
+    données via API authentifiée, isolation par militaire. Aucune donnée
+    sensible stockée dans le navigateur.
+  -->
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+  <link rel="icon" type="image/png" href="images/favicon.png" sizes="32x32" />
+
+  <style>
+    /* ============================================================
+       1. BASE & LAYOUT
+    ============================================================ */
+    body {
+      background-color: var(--color-bg);
+      padding-top: var(--header-height);
+    }
+
+    .dash-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - var(--header-height));
+      align-items: start;
+    }
+
+    /* ============================================================
+       2. HEADER USER ZONE
+    ============================================================ */
+    .header__user {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      flex-shrink: 0;
+    }
+
+    .header__user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .header__user-name {
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      color: var(--color-white);
+      line-height: 1.2;
+    }
+
+    .header__user-role {
+      font-size: 0.65rem;
+      color: var(--color-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .header__avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--color-primary-light);
+      border: 2px solid var(--color-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .header__avatar svg {
+      width: 18px;
+      height: 18px;
+      color: var(--color-gold);
+    }
+
+    .btn--deconnexion {
+      background-color: transparent;
+      color: rgba(255,255,255,0.75);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      padding: 0.4em 1em;
+      font-size: var(--font-size-sm);
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      transition: all var(--transition);
+      white-space: nowrap;
+      cursor: pointer;
+      font-family: var(--font-family);
+      font-weight: 600;
+    }
+
+    .btn--deconnexion:hover {
+      color: var(--color-white);
+      border-color: rgba(255,255,255,0.65);
+      background-color: rgba(255,255,255,0.08);
+    }
+
+    .btn--deconnexion svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .dash__menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: var(--space-2);
+      color: var(--color-white);
+    }
+
+    .dash__menu-toggle svg {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+
+    /* ============================================================
+       3. SIDEBAR — vert foncé institutionnel
+    ============================================================ */
+    .dash-sidebar {
+      background: linear-gradient(180deg, var(--color-primary-dark) 0%, #122e20 100%);
+      border-right: 1px solid rgba(201,168,76,0.15);
+      position: sticky;
+      top: var(--header-height);
+      height: calc(100vh - var(--header-height));
+      overflow-y: auto;
+      padding: var(--space-6) 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-nav { flex: 1; }
+
+    .sidebar-nav__label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(201,168,76,0.55);
+      padding: var(--space-2) var(--space-6);
+      margin-bottom: var(--space-2);
+    }
+
+    .sidebar-nav__list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 var(--space-6);
+    }
+
+    .sidebar-nav__link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-6);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      color: rgba(255,255,255,0.65);
+      border-left: 3px solid transparent;
+      transition: all var(--transition);
+      cursor: pointer;
+      background: none;
+      border-top: none;
+      border-right: none;
+      border-bottom: none;
+      width: 100%;
+      text-align: left;
+      font-family: var(--font-family);
+    }
+
+    .sidebar-nav__link svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: rgba(255,255,255,0.4);
+      transition: color var(--transition);
+    }
+
+    .sidebar-nav__link:hover {
+      color: var(--color-white);
+      background-color: rgba(255,255,255,0.08);
+    }
+
+    .sidebar-nav__link:hover svg { color: rgba(255,255,255,0.7); }
+
+    .sidebar-nav__link.active {
+      color: var(--color-white);
+      font-weight: 700;
+      background-color: rgba(201,168,76,0.10);
+      border-left-color: var(--color-gold);
+    }
+
+    .sidebar-nav__link.active svg { color: var(--color-gold); }
+
+    .sidebar-badge {
+      margin-left: auto;
+      background-color: var(--color-gold);
+      color: var(--color-primary-dark);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: var(--radius-full);
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       4. MAIN CONTENT
+    ============================================================ */
+    .dash-main {
+      padding: var(--space-10) var(--space-10) var(--space-16);
+      min-width: 0;
+    }
+
+    .dash-panel {
+      display: none;
+    }
+
+    .dash-panel.is-active {
+      display: block;
+      animation: panel-in 0.3s ease;
+    }
+
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Panel header */
+    .dash-panel__header {
+      margin-bottom: var(--space-8);
+      padding-bottom: var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .dash-panel__overtitle {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--color-gold);
+      margin-bottom: var(--space-2);
+    }
+
+    .dash-panel__title {
+      font-size: var(--font-size-2xl);
+      color: var(--color-primary-dark);
+      font-weight: 800;
+      margin-bottom: var(--space-2);
+    }
+
+    .dash-panel__subtitle {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* ============================================================
+       5. WELCOME CARD
+    ============================================================ */
+    .welcome-card {
+      background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-10) var(--space-12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-6);
+      margin-bottom: var(--space-10);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 90% 50%, rgba(201,168,76,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .welcome-card__text { position: relative; z-index: 1; }
+
+    .welcome-card__greeting {
+      font-size: var(--font-size-sm);
+      color: var(--color-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      margin-bottom: var(--space-3);
+    }
+
+    .welcome-card__name {
+      font-size: var(--font-size-2xl);
+      font-weight: 800;
+      color: var(--color-white);
+      margin-bottom: var(--space-4);
+      line-height: 1.2;
+    }
+
+    .welcome-card__desc {
+      font-size: var(--font-size-sm);
+      color: rgba(255,255,255,0.72);
+      max-width: 500px;
+      line-height: 1.7;
+    }
+
+    .welcome-card__flag {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      opacity: 0.55;
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+
+    .welcome-card__flag span {
+      display: block;
+      width: 5px;
+      height: 32px;
+      border-radius: 3px;
+    }
+
+    /* ============================================================
+       6. STATS GRID
+    ============================================================ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+      margin-bottom: var(--space-10);
+    }
+
+    .stat-card {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-8);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-5);
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .stat-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+
+    .stat-card__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-card__icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .stat-card__icon--pending  { background-color: rgba(252,209,22,0.14); color: #b88a00; }
+    .stat-card__icon--progress { background-color: rgba(26,71,49,0.10);  color: var(--color-primary); }
+    .stat-card__icon--done     { background-color: rgba(20,181,58,0.12);  color: #0e8c2a; }
+
+    .stat-card__value {
+      font-size: var(--font-size-3xl);
+      font-weight: 800;
+      color: var(--color-primary-dark);
+      line-height: 1;
+      margin-bottom: var(--space-1);
+    }
+
+    .stat-card__label {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+    }
+
+    .stat-card__body {
+      flex: 1;
+    }
+
+    /* ============================================================
+       7. SHORTCUTS
+    ============================================================ */
+    .dash-shortcuts {
+      display: flex;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .btn--secondary {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      color: var(--color-primary);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: 0.65em 1.5em;
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-base);
+      font-family: var(--font-family);
+      transition: all var(--transition);
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .btn--secondary:hover {
+      background-color: rgba(26,71,49,0.06);
+      border-color: var(--color-primary-light);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ============================================================
+       8. FORM
+    ============================================================ */
+    .form-card {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-10);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-required-note {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-8);
+    }
+
+    .form-required-note span { color: #ce1126; }
+
+    /* Form sections with dividers */
+    .form-section {
+      padding-bottom: var(--space-8);
+      margin-bottom: var(--space-8);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .form-section:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .form-section-title {
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      color: var(--color-primary-dark);
+      margin-bottom: var(--space-6);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .form-section-title svg {
+      width: 18px;
+      height: 18px;
+      color: var(--color-primary-light);
+      flex-shrink: 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+    }
+
+    .form-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .form-group--full { grid-column: 1 / -1; }
+    .form-group--half { max-width: 50%; }
+
+    .form-label {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .form-label--required::after {
+      content: ' *';
+      color: #ce1126;
+      font-size: 0.75em;
+    }
+
+    .form-label__optional {
+      font-size: 0.8em;
+      font-weight: 400;
+      color: var(--color-text-muted);
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 0.75em var(--space-4);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-family);
+      font-size: var(--font-size-base);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      transition: all var(--transition);
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--color-primary);
+      background-color: var(--color-surface);
+      box-shadow: 0 0 0 3px rgba(26,71,49,0.10);
+    }
+
+    .form-input.is-invalid,
+    .form-select.is-invalid,
+    .form-textarea.is-invalid {
+      border-color: #ce1126;
+      box-shadow: 0 0 0 3px rgba(206,17,38,0.08);
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: var(--color-text-light);
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7060' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right var(--space-4) center;
+      padding-right: var(--space-10);
+      cursor: pointer;
+    }
+
+    /* Textarea — grande zone de description */
+    .form-textarea {
+      resize: vertical;
+      min-height: 200px;
+      line-height: 1.7;
+      padding: var(--space-4);
+    }
+
+    .form-hint {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+    }
+
+    /* Radio group */
+    .radio-group {
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    .radio-option { position: relative; }
+
+    .radio-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .radio-option__label {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0.5em var(--space-5);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: all var(--transition);
+      user-select: none;
+    }
+
+    .radio-option input:checked + .radio-option__label {
+      border-color: var(--color-primary);
+      background-color: rgba(26,71,49,0.07);
+      color: var(--color-primary-dark);
+      font-weight: 700;
+    }
+
+    .radio-option input:focus-visible + .radio-option__label {
+      outline: 3px solid var(--color-gold);
+      outline-offset: 2px;
+    }
+
+    .radio-option--faible    input:checked + .radio-option__label { border-color: #0e8c2a; color: #0e8c2a; background-color: rgba(14,140,42,0.07); }
+    .radio-option--modere    input:checked + .radio-option__label { border-color: #b88a00; color: #b88a00; background-color: rgba(184,138,0,0.07); }
+    .radio-option--important input:checked + .radio-option__label { border-color: #ce1126; color: #ce1126; background-color: rgba(206,17,38,0.07); }
+
+    .field-error {
+      font-size: var(--font-size-sm);
+      color: #ce1126;
+      display: none;
+    }
+
+    .field-error.is-visible { display: block; }
+
+    /* Form actions */
+    .form-actions {
+      display: flex;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+      margin-top: var(--space-8);
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .btn--reset {
+      background: transparent;
+      border: 1.5px solid var(--color-border);
+      color: var(--color-text-muted);
+      padding: 0.65em 1.5em;
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-base);
+      font-family: var(--font-family);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .btn--reset:hover {
+      border-color: var(--color-text-muted);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+
+    /* Form success */
+    .form-success {
+      display: none;
+      align-items: flex-start;
+      gap: var(--space-4);
+      padding: var(--space-8);
+      background-color: rgba(14,140,42,0.07);
+      border: 1px solid rgba(14,140,42,0.25);
+      border-radius: var(--radius-lg);
+      margin-top: var(--space-6);
+    }
+
+    .form-success.is-visible {
+      display: flex;
+      animation: panel-in 0.3s ease;
+    }
+
+    .form-success__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #0e8c2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .form-success__icon svg {
+      width: 20px;
+      height: 20px;
+      color: var(--color-white);
+    }
+
+    .form-success__title {
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      color: #0a6020;
+      margin-bottom: var(--space-1);
+    }
+
+    .form-success__text {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    .form-success__ref {
+      display: inline-block;
+      margin-top: var(--space-3);
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      color: var(--color-primary);
+      background-color: rgba(26,71,49,0.07);
+      padding: 0.3em 0.9em;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.06em;
+    }
+
+    /* ============================================================
+       9. DEMANDS — FILTERS & TABLE
+    ============================================================ */
+    .demandes-filters {
+      display: flex;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.4em var(--space-5);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      background: none;
+      font-family: var(--font-family);
+      transition: all var(--transition);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+      color: var(--color-white);
+      font-weight: 700;
+    }
+
+    .demandes-table-wrap {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .demandes-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .demandes-table th {
+      background-color: var(--color-bg-alt);
+      text-align: left;
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: var(--space-4) var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .demandes-table td {
+      padding: var(--space-4) var(--space-6);
+      font-size: var(--font-size-sm);
+      color: var(--color-text);
+      border-bottom: 1px solid rgba(221,227,221,0.5);
+      vertical-align: middle;
+    }
+
+    .demandes-table tr:last-child td { border-bottom: none; }
+    .demandes-table tr:hover td { background-color: rgba(26,71,49,0.03); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0.25em 0.7em;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: currentColor;
+      flex-shrink: 0;
+    }
+
+    .badge--attente  { background-color: rgba(252,209,22,0.15); color: #9a7000; }
+    .badge--en-cours { background-color: rgba(26,71,49,0.10);   color: var(--color-primary); }
+    .badge--traitee  { background-color: rgba(14,140,42,0.12);  color: #0a6020; }
+
+    .btn--details {
+      font-size: var(--font-size-sm);
+      padding: 0.35em 0.9em;
+      font-weight: 600;
+      background-color: transparent;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-primary);
+      cursor: pointer;
+      font-family: var(--font-family);
+      transition: all var(--transition);
+    }
+
+    .btn--details:hover {
+      background-color: rgba(26,71,49,0.07);
+      border-color: var(--color-primary-light);
+    }
+
+    /* ============================================================
+       10. PROFILE
+    ============================================================ */
+    .profile-card {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-10);
+      max-width: 680px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      margin-bottom: var(--space-8);
+      padding-bottom: var(--space-8);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .profile-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+      border: 3px solid var(--color-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(15,43,30,0.15);
+    }
+
+    .profile-avatar__initials {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--color-gold);
+      letter-spacing: 0.05em;
+      line-height: 1;
+    }
+
+    .profile-info { flex: 1; min-width: 0; }
+
+    .profile-name {
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      color: var(--color-primary-dark);
+      margin-bottom: var(--space-3);
+      line-height: 1.3;
+    }
+
+    .profile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0.2em 0.7em;
+      border-radius: var(--radius-full);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      background-color: rgba(201,168,76,0.15);
+      color: #8a6f00;
+      margin-bottom: var(--space-3);
+    }
+
+    .profile-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: currentColor;
+    }
+
+    .profile-meta {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    .profile-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6) var(--space-8);
+    }
+
+    .profile-info-grid .detail-row { margin-bottom: 0; }
+
+    /* ============================================================
+       11. MODAL
+    ============================================================ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(10,25,15,0.55);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6);
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+      animation: fade-in 0.2s ease;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .modal {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-lg);
+      max-width: 560px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: modal-in 0.25s ease;
+    }
+
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(-16px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .modal__title {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--color-primary-dark);
+    }
+
+    .modal__close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background-color: var(--color-bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-muted);
+      transition: all var(--transition);
+      font-family: var(--font-family);
+    }
+
+    .modal__close:hover {
+      background-color: var(--color-bg-alt);
+      color: var(--color-text);
+    }
+
+    .modal__close svg { width: 16px; height: 16px; display: block; }
+
+    .modal__body { padding: var(--space-6); }
+
+    .detail-row {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      margin-bottom: var(--space-5);
+    }
+
+    .detail-row:last-child { margin-bottom: 0; }
+
+    .detail-row__label {
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .detail-row__value {
+      font-size: var(--font-size-base);
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+
+    .detail-row__value--muted {
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+
+    .modal__footer {
+      padding: var(--space-4) var(--space-6);
+      border-top: 1px solid var(--color-border);
+      text-align: right;
+    }
+
+    /* ============================================================
+       12. UTILITIES
+    ============================================================ */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: var(--space-12) var(--space-6);
+    }
+
+    .empty-state__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background-color: rgba(26,71,49,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-4);
+      color: var(--color-primary-light);
+    }
+
+    .empty-state__icon svg { width: 28px; height: 28px; }
+
+    .empty-state__title {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--color-primary-dark);
+      margin-bottom: var(--space-2);
+    }
+
+    .empty-state__text {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+    }
+
+    .demo-banner {
+      background-color: rgba(201,168,76,0.09);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-5);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-8);
+    }
+
+    .demo-banner svg {
+      width: 16px;
+      height: 16px;
+      color: var(--color-gold);
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       13. ANIMATIONS
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      animation: reveal-in 0.4s ease;
+    }
+
+    @keyframes reveal-in {
+      from { opacity: 0; transform: translateY(15px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-card.reveal:nth-child(1) { animation-delay: 0.05s; }
+    .stat-card.reveal:nth-child(2) { animation-delay: 0.15s; }
+    .stat-card.reveal:nth-child(3) { animation-delay: 0.25s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ============================================================
+       14. RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1024px) {
+      .dash-layout { grid-template-columns: 220px 1fr; }
+      .dash-main { padding: var(--space-8) var(--space-6) var(--space-12); }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .stats-grid .stat-card:last-child { grid-column: 1 / -1; }
+      .welcome-card { padding: var(--space-8) var(--space-10); }
+      .form-card { padding: var(--space-8); }
+      .profile-card { padding: var(--space-8); }
+    }
+
+    @media (max-width: 768px) {
+      .header__user-info { display: none; }
+      .dash__menu-toggle { display: flex; }
+
+      .dash-layout {
+        grid-template-columns: 1fr;
+        position: relative;
+      }
+
+      .dash-sidebar {
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        bottom: 0;
+        width: 260px;
+        z-index: 150;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .dash-sidebar.is-open { transform: translateX(0); }
+
+      .dash-sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        top: var(--header-height);
+        background-color: rgba(10,25,15,0.4);
+        z-index: 140;
+        display: none;
+      }
+
+      .dash-sidebar-overlay.is-visible { display: block; }
+
+      .dash-main { padding: var(--space-6) var(--space-4) var(--space-10); }
+
+      .stats-grid { grid-template-columns: 1fr; }
+      .stats-grid .stat-card:last-child { grid-column: auto; }
+
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group--half { max-width: 100%; }
+
+      .welcome-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: var(--space-6);
+      }
+      .welcome-card__flag { display: none; }
+
+      .profile-info-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+      }
+
+      .demandes-table th:nth-child(3),
+      .demandes-table td:nth-child(3) { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .header__user { gap: var(--space-2); }
+      .btn--deconnexion span { display: none; }
+      .demandes-table th:nth-child(2),
+      .demandes-table td:nth-child(2) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     EN-TÊTE FIXE
+============================================================ -->
+<header class="header" id="header">
+  <div class="container header__inner">
+
+    <div class="header__brand">
+      <div class="header__logo-wrap">
+        <div class="header__logo-placeholder" aria-label="Logo FAMa ka Keneya">
+          <span class="header__logo-initials">FAMa</span>
+        </div>
+      </div>
+      <div class="header__title-wrap">
+        <span class="header__site-name">FAMa ka Keneya</span>
+        <span class="header__tagline">Espace Militaire</span>
+      </div>
+    </div>
+
+    <button class="dash__menu-toggle" id="sidebarToggle" aria-label="Ouvrir le menu de navigation" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <div class="header__user">
+      <div class="header__user-info" aria-label="Utilisateur connecté">
+        <span class="header__user-name">Sgt. Amadou Coulibaly</span>
+        <span class="header__user-role">Militaire · Démo</span>
+      </div>
+      <div class="header__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <button class="btn--deconnexion" id="btnDeconnexion" aria-label="Se déconnecter">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <polyline points="16 17 21 12 16 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Déconnexion</span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ============================================================
+     DASHBOARD LAYOUT
+============================================================ -->
+<div class="dash-layout">
+
+  <div class="dash-sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="dash-sidebar" id="dashSidebar" aria-label="Navigation de l'espace militaire">
+    <nav class="sidebar-nav">
+      <p class="sidebar-nav__label">Menu principal</p>
+      <ul class="sidebar-nav__list">
+        <li>
+          <button class="sidebar-nav__link active" data-panel="tableau-de-bord">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+              <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+              <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+              <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Tableau de bord
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-nav__link" data-panel="nouvelle-demande">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Nouvelle demande
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-nav__link" data-panel="mes-demandes">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="2"/>
+              <path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Mes demandes
+            <span class="sidebar-badge" id="badgeDemandes">3</span>
+          </button>
+        </li>
+      </ul>
+
+      <p class="sidebar-nav__label">Compte</p>
+      <ul class="sidebar-nav__list">
+        <li>
+          <button class="sidebar-nav__link" data-panel="mon-profil">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Mon profil
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dash-main">
+
+    <!-- ════════ PANNEAU 1 : TABLEAU DE BORD ════════ -->
+    <section class="dash-panel is-active" id="panel-tableau-de-bord" aria-label="Tableau de bord">
+
+      <div class="demo-banner" role="note">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span><strong>Mode démonstration.</strong> Les données affichées sont fictives. L’authentification et la base de données seront activées dans la prochaine version.</span>
+      </div>
+
+      <div class="welcome-card" aria-label="Bienvenue">
+        <div class="welcome-card__text">
+          <p class="welcome-card__greeting">Bienvenue sur votre espace personnel</p>
+          <h1 class="welcome-card__name">Bonjour, Sgt. Coulibaly</h1>
+          <p class="welcome-card__desc">
+            Vous avez accès à votre espace santé personnel. Soumettez une demande de consultation,
+            suivez son traitement et consultez les réponses des professionnels de santé.
+          </p>
+        </div>
+        <div class="welcome-card__flag" aria-hidden="true">
+          <span style="background-color:#14b53a"></span>
+          <span style="background-color:#fcd116"></span>
+          <span style="background-color:#ce1126"></span>
+        </div>
+      </div>
+
+      <div class="stats-grid" aria-label="Résumé de vos demandes">
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--pending" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="stat-card__body">
+            <p class="stat-card__value" id="statAttente">1</p>
+            <p class="stat-card__label">En attente</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--progress" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="stat-card__body">
+            <p class="stat-card__value" id="statEnCours">1</p>
+            <p class="stat-card__label">En cours</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card__icon stat-card__icon--done" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="stat-card__body">
+            <p class="stat-card__value" id="statTraitee">1</p>
+            <p class="stat-card__label">Traitées</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-shortcuts">
+        <button class="btn btn--primary" data-panel="nouvelle-demande">
+          Soumettre une demande
+        </button>
+        <button class="btn btn--secondary" data-panel="mes-demandes">
+          Voir mes demandes
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ════════ PANNEAU 2 : NOUVELLE DEMANDE ════════ -->
+    <section class="dash-panel" id="panel-nouvelle-demande" aria-label="Nouvelle demande de consultation">
+
+      <div class="dash-panel__header">
+        <p class="dash-panel__overtitle">Espace médical</p>
+        <h2 class="dash-panel__title">Nouvelle demande de consultation</h2>
+        <p class="dash-panel__subtitle">
+          Remplissez le formulaire ci-dessous. Un professionnel de santé prendra en charge votre demande.
+        </p>
+      </div>
+
+      <div class="demo-banner" role="note">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span><strong>Démonstration.</strong> Ce formulaire est fonctionnel côté interface. Les données ne sont pas encore envoyées à une base de données.</span>
+      </div>
+
+      <div class="form-card">
+        <p class="form-required-note">Les champs marqués d’une <span>*</span> sont obligatoires.</p>
+
+        <form id="demandeForm" novalidate>
+
+          <!-- Section 1 : Type de consultation -->
+          <div class="form-section">
+            <h3 class="form-section-title">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Type de consultation
+            </h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label form-label--required" for="typeConsultation">Spécialité souhaitée</label>
+                <select id="typeConsultation" name="typeConsultation" class="form-select" required>
+                  <option value="">— Sélectionner —</option>
+                  <option value="generale">Médecine générale</option>
+                  <option value="cardiologie">Cardiologie</option>
+                  <option value="dermatologie">Dermatologie</option>
+                  <option value="ophtalmologie">Ophtalmologie</option>
+                  <option value="traumatologie">Traumatologie</option>
+                  <option value="psychiatrie">Santé mentale / Psychiatrie</option>
+                  <option value="autre">Autre spécialité</option>
+                </select>
+                <span class="field-error" id="errTypeConsultation">Veuillez sélectionner une spécialité.</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="urgence">Niveau de gêne ressenti</label>
+                <div class="radio-group" role="radiogroup" aria-label="Niveau de gêne">
+                  <label class="radio-option radio-option--faible">
+                    <input type="radio" name="urgence" value="faible" checked />
+                    <span class="radio-option__label">Faible</span>
+                  </label>
+                  <label class="radio-option radio-option--modere">
+                    <input type="radio" name="urgence" value="modere" />
+                    <span class="radio-option__label">Modéré</span>
+                  </label>
+                  <label class="radio-option radio-option--important">
+                    <input type="radio" name="urgence" value="important" />
+                    <span class="radio-option__label">Important</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2 : Description du problème -->
+          <div class="form-section">
+            <h3 class="form-section-title">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Description du problème
+            </h3>
+            <div class="form-stack">
+              <div class="form-group form-group--half">
+                <label class="form-label form-label--required" for="depuis">Depuis quand ce problème est présent ?</label>
+                <select id="depuis" name="depuis" class="form-select" required>
+                  <option value="">— Sélectionner —</option>
+                  <option value="aujourd-hui">Aujourd'hui</option>
+                  <option value="quelques-jours">Quelques jours (moins d'une semaine)</option>
+                  <option value="une-semaine">1 à 2 semaines</option>
+                  <option value="un-mois">2 semaines à 1 mois</option>
+                  <option value="plusieurs-mois">Plus d'un mois</option>
+                </select>
+                <span class="field-error" id="errDepuis">Veuillez indiquer la durée.</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label form-label--required" for="symptomes">Description détaillée des symptômes</label>
+                <textarea
+                  id="symptomes"
+                  name="symptomes"
+                  class="form-textarea"
+                  placeholder="Décrivez votre problème de santé de façon précise : symptômes ressentis, localisation, intensité, évolution…"
+                  maxlength="1000"
+                  required></textarea>
+                <span class="field-error" id="errSymptomes">Veuillez décrire votre problème.</span>
+                <span class="form-hint" id="charCount">0 / 1000 caractères</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3 : Informations complémentaires -->
+          <div class="form-section">
+            <h3 class="form-section-title">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Informations complémentaires
+            </h3>
+            <div class="form-group">
+              <label class="form-label" for="infoComplementaire">
+                Traitements en cours, allergies connues, antécédents
+                <span class="form-label__optional">(facultatif)</span>
+              </label>
+              <input type="text" id="infoComplementaire" name="infoComplementaire" class="form-input" placeholder="Ex : Aucun traitement en cours, pas d'allergie connue" maxlength="300" />
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="form-actions">
+            <button type="submit" class="btn btn--primary" id="btnSubmitDemande">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M22 2L15 22l-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Envoyer ma demande
+            </button>
+            <button type="button" class="btn--reset" id="btnResetDemande">Effacer le formulaire</button>
+          </div>
+
+        </form>
+
+        <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+          <div class="form-success__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <p class="form-success__title">Demande envoyée avec succès</p>
+            <p class="form-success__text">
+              Votre demande a été transmise. Un professionnel de santé vous répondra dans les meilleurs délais.<br/>
+              Vous pouvez suivre l’avancement dans la section <strong>Mes demandes</strong>.
+            </p>
+            <span class="form-success__ref" id="successRef"></span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ════════ PANNEAU 3 : MES DEMANDES ════════ -->
+    <section class="dash-panel" id="panel-mes-demandes" aria-label="Mes demandes de consultation">
+
+      <div class="dash-panel__header">
+        <p class="dash-panel__overtitle">Suivi médical</p>
+        <h2 class="dash-panel__title">Mes demandes</h2>
+        <p class="dash-panel__subtitle">Historique et état de vos demandes de consultation.</p>
+      </div>
+
+      <div class="demandes-filters" role="group" aria-label="Filtrer les demandes">
+        <button class="filter-btn active" data-filter="tous">Toutes (3)</button>
+        <button class="filter-btn" data-filter="En attente">En attente (1)</button>
+        <button class="filter-btn" data-filter="En cours">En cours (1)</button>
+        <button class="filter-btn" data-filter="Traitée">Traitées (1)</button>
+      </div>
+
+      <div class="demandes-table-wrap">
+        <table class="demandes-table" aria-label="Liste de vos demandes de consultation">
+          <thead>
+            <tr>
+              <th scope="col">N° Demande</th>
+              <th scope="col">Date</th>
+              <th scope="col">Spécialité</th>
+              <th scope="col">Statut</th>
+              <th scope="col"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="demandesTableBody">
+            <!-- Rempli par JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ════════ PANNEAU 4 : MON PROFIL ════════ -->
+    <section class="dash-panel" id="panel-mon-profil" aria-label="Mon profil">
+
+      <div class="dash-panel__header">
+        <p class="dash-panel__overtitle">Compte</p>
+        <h2 class="dash-panel__title">Mon profil</h2>
+        <p class="dash-panel__subtitle">Informations associées à votre compte de démonstration.</p>
+      </div>
+
+      <div class="demo-banner" role="note">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Ces informations sont fictives. Dans la version finale, elles seront chargées depuis la base de données après authentification.</span>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="profile-avatar" aria-hidden="true">
+            <span class="profile-avatar__initials">AC</span>
+          </div>
+          <div class="profile-info">
+            <h3 class="profile-name">Sgt. Amadou Coulibaly</h3>
+            <span class="profile-badge">Militaire · Démo</span>
+            <p class="profile-meta">
+              Matricule : FAMa-2024-00142<br/>
+              Unité : 3<sup>e</sup> Bataillon d'infanterie
+            </p>
+          </div>
+        </div>
+
+        <div class="profile-info-grid">
+          <div class="detail-row">
+            <span class="detail-row__label">Grade</span>
+            <span class="detail-row__value">Sergent</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-row__label">Région de service</span>
+            <span class="detail-row__value">Bamako</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-row__label">Profil</span>
+            <span class="detail-row__value">Militaire (démonstration)</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-row__label">Groupe sanguin</span>
+            <span class="detail-row__value detail-row__value--muted">Non renseigné (données fictives)</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<!-- ============================================================
+     MODALE DE DÉTAILS
+============================================================ -->
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title" id="modalTitle">Détails de la demande</h2>
+      <button class="modal__close" id="modalClose" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal__body" id="modalBody"></div>
+    <div class="modal__footer">
+      <button class="btn btn--primary" id="modalCloseBtn" style="font-size:var(--font-size-sm);">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ============================================================
+   DONNÉES DE DÉMONSTRATION — entièrement fictives
+============================================================ */
+var DEMANDES_DEMO = [
+  {
+    id: 'REQ-2024-0031',
+    date: '05 nov. 2024',
+    specialite: 'Médecine générale',
+    statut: 'Traitée',
+    gene: 'Modéré',
+    depuis: 'Quelques jours',
+    symptomes: 'Maux de tête persistants depuis 3 jours, léger vertige le matin. Pas de fièvre.',
+    reponse: 'Consultation réalisée le 06/11. Prescription d\u2019antalgiques (paracétamol 1g). Repos recommandé 48h. Réévaluation si persistance.'
+  },
+  {
+    id: 'REQ-2024-0038',
+    date: '08 nov. 2024',
+    specialite: 'Traumatologie',
+    statut: 'En cours',
+    gene: 'Important',
+    depuis: 'Aujourd\u2019hui',
+    symptomes: 'Douleur intense au genou droit suite à une chute lors d\u2019un exercice. Gonflement visible.',
+    reponse: null
+  },
+  {
+    id: 'REQ-2024-0042',
+    date: '10 nov. 2024',
+    specialite: 'Dermatologie',
+    statut: 'En attente',
+    gene: 'Faible',
+    depuis: 'Plus d\u2019un mois',
+    symptomes: 'Irritation cutanée sur l\u2019avant-bras droit depuis environ 6 semaines. Pas de douleur.',
+    reponse: null
+  }
+];
+
+var prochainNumero = 43;
+
+/* ============================================================
+   1. NAVIGATION ENTRE LES PANNEAUX
+============================================================ */
+function navigateToPanel(panelId) {
+  document.querySelectorAll('.sidebar-nav__link').forEach(function(link) {
+    link.classList.remove('active');
+  });
+
+  var targetLink = document.querySelector('.sidebar-nav__link[data-panel="' + panelId + '"]');
+  if (targetLink) targetLink.classList.add('active');
+
+  document.querySelectorAll('.dash-panel').forEach(function(panel) {
+    panel.classList.remove('is-active');
+  });
+
+  var targetPanel = document.getElementById('panel-' + panelId);
+  if (targetPanel) {
+    targetPanel.classList.add('is-active');
+    /* Révèle immédiatement les éléments .reveal du panneau affiché */
+    targetPanel.querySelectorAll('.reveal').forEach(function(el) {
+      el.classList.add('is-visible');
+    });
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  closeSidebar();
+}
+
+document.querySelectorAll('.sidebar-nav__link[data-panel]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    navigateToPanel(btn.getAttribute('data-panel'));
+  });
+});
+
+document.querySelectorAll('.dash-shortcuts [data-panel]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    navigateToPanel(btn.getAttribute('data-panel'));
+  });
+});
+
+/* ============================================================
+   2. SIDEBAR MOBILE
+============================================================ */
+var sidebarToggle  = document.getElementById('sidebarToggle');
+var dashSidebar    = document.getElementById('dashSidebar');
+var sidebarOverlay = document.getElementById('sidebarOverlay');
+
+function openSidebar() {
+  dashSidebar.classList.add('is-open');
+  sidebarOverlay.classList.add('is-visible');
+  sidebarToggle.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+  dashSidebar.classList.remove('is-open');
+  sidebarOverlay.classList.remove('is-visible');
+  sidebarToggle.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+
+sidebarToggle.addEventListener('click', function() {
+  dashSidebar.classList.contains('is-open') ? closeSidebar() : openSidebar();
+});
+
+sidebarOverlay.addEventListener('click', closeSidebar);
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && dashSidebar.classList.contains('is-open')) {
+    closeSidebar();
+    sidebarToggle.focus();
+  }
+});
+
+/* ============================================================
+   3. TABLEAU DES DEMANDES
+============================================================ */
+function getBadgeHTML(statut) {
+  var classes = { 'En attente': 'badge--attente', 'En cours': 'badge--en-cours', 'Traitée': 'badge--traitee' };
+  return '<span class="badge ' + (classes[statut] || '') + '">' + statut + '</span>';
+}
+
+function renderTable(liste) {
+  var tbody = document.getElementById('demandesTableBody');
+  if (!liste.length) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state">' +
+      '<div class="empty-state__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" stroke="currentColor" stroke-width="2"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="2"/></svg></div>' +
+      '<p class="empty-state__title">Aucune demande trouvée</p>' +
+      '<p class="empty-state__text">Aucune demande ne correspond au filtre sélectionné.</p>' +
+      '</div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = liste.map(function(d) {
+    return '<tr>' +
+      '<td><strong>' + d.id + '</strong></td>' +
+      '<td>' + d.date + '</td>' +
+      '<td>' + d.specialite + '</td>' +
+      '<td>' + getBadgeHTML(d.statut) + '</td>' +
+      '<td><button class="btn--details" data-id="' + d.id + '">Détails</button></td>' +
+      '</tr>';
+  }).join('');
+
+  tbody.querySelectorAll('.btn--details').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      openModal(btn.getAttribute('data-id'));
+    });
+  });
+}
+
+renderTable(DEMANDES_DEMO);
+
+document.querySelectorAll('.filter-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var filtre = btn.getAttribute('data-filter');
+    var liste  = filtre === 'tous' ? DEMANDES_DEMO : DEMANDES_DEMO.filter(function(d) { return d.statut === filtre; });
+    renderTable(liste);
+  });
+});
+
+/* ============================================================
+   4. MODALE DE DÉTAILS
+============================================================ */
+var modalBackdrop = document.getElementById('modalBackdrop');
+var modalBody     = document.getElementById('modalBody');
+var modalTitle    = document.getElementById('modalTitle');
+
+function openModal(id) {
+  var d = DEMANDES_DEMO.find(function(x) { return x.id === id; });
+  if (!d) return;
+
+  modalTitle.textContent = 'Demande ' + d.id;
+
+  modalBody.innerHTML =
+    '<div class="detail-row"><span class="detail-row__label">Numéro</span><span class="detail-row__value"><strong>' + d.id + '</strong></span></div>' +
+    '<div class="detail-row"><span class="detail-row__label">Date de soumission</span><span class="detail-row__value">' + d.date + '</span></div>' +
+    '<div class="detail-row"><span class="detail-row__label">Spécialité</span><span class="detail-row__value">' + d.specialite + '</span></div>' +
+    '<div class="detail-row"><span class="detail-row__label">Niveau de gêne</span><span class="detail-row__value">' + d.gene + '</span></div>' +
+    '<div class="detail-row"><span class="detail-row__label">Ancienneté</span><span class="detail-row__value">' + d.depuis + '</span></div>' +
+    '<div class="detail-row"><span class="detail-row__label">Description</span><span class="detail-row__value">' + d.symptomes + '</span></div>' +
+    '<div class="detail-row"><span class="detail-row__label">Statut</span><span class="detail-row__value">' + getBadgeHTML(d.statut) + '</span></div>' +
+    '<div class="detail-row"><span class="detail-row__label">Réponse du médecin</span><span class="detail-row__value ' + (d.reponse ? '' : 'detail-row__value--muted') + '">' +
+      (d.reponse ? d.reponse : 'En attente de réponse.') + '</span></div>';
+
+  modalBackdrop.classList.add('is-open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('modalClose').focus();
+}
+
+function closeModal() {
+  modalBackdrop.classList.remove('is-open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+modalBackdrop.addEventListener('click', function(e) {
+  if (e.target === modalBackdrop) closeModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && modalBackdrop.classList.contains('is-open')) closeModal();
+});
+
+/* ============================================================
+   5. FORMULAIRE DE DEMANDE
+============================================================ */
+var demandeForm  = document.getElementById('demandeForm');
+var formSuccess  = document.getElementById('formSuccess');
+var charCount    = document.getElementById('charCount');
+var textarea     = document.getElementById('symptomes');
+
+textarea.addEventListener('input', function() {
+  charCount.textContent = textarea.value.length + ' / 1000 caract\u00e8res';
+});
+
+document.getElementById('btnResetDemande').addEventListener('click', function() {
+  demandeForm.reset();
+  charCount.textContent = '0 / 1000 caract\u00e8res';
+  formSuccess.classList.remove('is-visible');
+  document.querySelectorAll('.field-error').forEach(function(el) { el.classList.remove('is-visible'); });
+  document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(function(el) { el.classList.remove('is-invalid'); });
+});
+
+demandeForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  var typeVal      = document.getElementById('typeConsultation').value.trim();
+  var symptomesVal = textarea.value.trim();
+  var depuisVal    = document.getElementById('depuis').value.trim();
+  var urgenceVal   = document.querySelector('input[name="urgence"]:checked');
+
+  var valide = true;
+
+  document.querySelectorAll('.field-error').forEach(function(el) { el.classList.remove('is-visible'); });
+  document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(function(el) { el.classList.remove('is-invalid'); });
+
+  if (!typeVal) {
+    document.getElementById('errTypeConsultation').classList.add('is-visible');
+    document.getElementById('typeConsultation').classList.add('is-invalid');
+    valide = false;
+  }
+
+  if (symptomesVal.length < 20) {
+    document.getElementById('errSymptomes').textContent = symptomesVal.length === 0
+      ? 'Veuillez d\u00e9crire votre probl\u00e8me.'
+      : 'La description doit contenir au moins 20 caract\u00e8res.';
+    document.getElementById('errSymptomes').classList.add('is-visible');
+    textarea.classList.add('is-invalid');
+    valide = false;
+  }
+
+  if (!depuisVal) {
+    document.getElementById('errDepuis').classList.add('is-visible');
+    document.getElementById('depuis').classList.add('is-invalid');
+    valide = false;
+  }
+
+  if (!valide) {
+    var premierErreur = document.querySelector('.is-invalid');
+    if (premierErreur) premierErreur.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  var refNum = 'REQ-2024-00' + prochainNumero;
+  prochainNumero += 1;
+
+  var maintenant = new Date();
+  var dateStr = maintenant.getDate().toString().padStart(2,'0') + ' ' +
+    ['jan.','f\u00e9v.','mar.','avr.','mai','juin','juil.','ao\u00fbt','sept.','oct.','nov.','d\u00e9c.'][maintenant.getMonth()] + ' ' +
+    maintenant.getFullYear();
+
+  var labelSpecialite = document.getElementById('typeConsultation').options[document.getElementById('typeConsultation').selectedIndex].text;
+  var labelGene = urgenceVal ? urgenceVal.value.charAt(0).toUpperCase() + urgenceVal.value.slice(1) : 'Faible';
+  var labelDepuis = document.getElementById('depuis').options[document.getElementById('depuis').selectedIndex].text;
+
+  DEMANDES_DEMO.unshift({
+    id:         refNum,
+    date:       dateStr,
+    specialite: labelSpecialite,
+    statut:     'En attente',
+    gene:       labelGene,
+    depuis:     labelDepuis,
+    symptomes:  symptomesVal,
+    reponse:    null
+  });
+
+  updateStats();
+
+  document.getElementById('successRef').textContent = 'R\u00e9f\u00e9rence : ' + refNum;
+  formSuccess.classList.add('is-visible');
+  demandeForm.reset();
+  charCount.textContent = '0 / 1000 caract\u00e8res';
+  formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+/* ============================================================
+   6. MISE À JOUR DES STATISTIQUES
+============================================================ */
+function updateStats() {
+  var attente  = DEMANDES_DEMO.filter(function(d) { return d.statut === 'En attente'; }).length;
+  var enCours  = DEMANDES_DEMO.filter(function(d) { return d.statut === 'En cours'; }).length;
+  var traitees = DEMANDES_DEMO.filter(function(d) { return d.statut === 'Traitée'; }).length;
+
+  document.getElementById('statAttente').textContent = attente;
+  document.getElementById('statEnCours').textContent = enCours;
+  document.getElementById('statTraitee').textContent = traitees;
+  document.getElementById('badgeDemandes').textContent = DEMANDES_DEMO.length;
+
+  var total = DEMANDES_DEMO.length;
+  var filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns[0].textContent = 'Toutes (' + total + ')';
+  filterBtns[1].textContent = 'En attente (' + attente + ')';
+  filterBtns[2].textContent = 'En cours (' + enCours + ')';
+  filterBtns[3].textContent = 'Trait\u00e9es (' + traitees + ')';
+}
+
+/* ============================================================
+   7. DÉCONNEXION
+============================================================ */
+document.getElementById('btnDeconnexion').addEventListener('click', function() {
+  if (window.confirm('Voulez-vous vous déconnecter de FAMa ka Keneya ?')) {
+    window.location.href = 'login.html';
+  }
+});
+
+/* ============================================================
+   8. ANIMATIONS D'APPARITION
+============================================================ */
+(function initRevealAnimations() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var targets = document.querySelectorAll(
+    '.welcome-card, .stat-card, .dash-panel__header, .demo-banner, .form-card, .demandes-table-wrap, .demandes-filters, .profile-card'
+  );
+  targets.forEach(function(el) { el.classList.add('reveal'); });
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  targets.forEach(function(el) { observer.observe(el); });
+})();
+</script>
+
+</body>
+</html>
